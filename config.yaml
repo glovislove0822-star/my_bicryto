@@ -1,0 +1,135 @@
+# 심볼 설정
+symbols: ["ETHUSDT", "XRPUSDT", "ADAUSDT", "DOGEUSDT", "LINKUSDT", "TRUMPUSDT"]
+
+# 바 설정
+bar:
+  base: "1m"
+  targets: ["3m", "5m"]
+
+# 수수료 설정
+fees:
+  maker_bp: 2
+  taker_bp: 5
+
+# 슬리피지 모델
+slippage:
+  model: "depth_linear"
+  k: 0.0001
+  target_p95_bps: 8.0
+  step_cap: 0.25
+
+# 리스크 관리
+risk:
+  target_vol: 0.25
+  tp_atr: 1.2
+  sl_atr: 0.6
+  trail_atr: 0.8
+  tmax_bars: 40
+  daily_stop_pct: 0.02
+  daily_take_pct: 0.04
+  circuit_breaker:
+    pnl_sigma_k: 2.5
+
+# 게이팅 조건
+gating:
+  ofi_z_long: 0.2
+  ofi_z_short: -0.2
+  spread_bp_max: 1.5
+  depth_min: 5000
+
+# 메타 라벨
+meta_label:
+  use: true
+  p_threshold: 0.6
+  ensemble: true
+  models: ["lgb", "xgb", "catboost"]
+
+# 마켓 레짐 (Enhanced v2.0)
+regime:
+  enabled: true
+  vol_clustering: true
+  adaptive_params: true
+  
+# 피라미드 진입 (Enhanced v2.0)
+pyramid:
+  enabled: true
+  max_splits: 3
+  liquidity_based: true
+  
+# 펀딩 차익거래 (Enhanced v2.0)
+funding:
+  enabled: true
+  z_threshold: 2.0
+  harvest_min: 0.01
+  
+# 스캘핑 (Enhanced v2.0)
+scalping:
+  enabled: true
+  max_size_pct: 0.1
+  spread_threshold: 0.5
+  
+# 포트폴리오 (Enhanced v2.0)
+portfolio:
+  enabled: true
+  kelly_fraction: 0.25
+  max_correlation: 0.7
+  rebalance_hours: 4
+
+# Optuna 최적화
+optuna:
+  trials: 200
+  pruner: "median"
+  sampler: "tpe"
+  lambda_mdd: 0.25
+  mu_turnover: 0.02
+  nu_funding: 0.1
+  mdd_cap: 0.35
+  turnover_cap: 25.0
+  min_trades: 200
+  skew_floor: -0.5
+  regime_consistency_min: 0.6
+  penalty_neg_sharpe: 1.0
+  penalty_mid: 0.5
+  penalty_big: 2.0
+  accept_gate:
+    min_wfo_winrate: 0.6
+    min_wfo_sharpe: 0.8
+    max_wfo_mdd: 0.3
+
+# Walk-Forward Optimization
+wfo:
+  train_days: 60
+  test_days: 15
+  step_days: 15
+  regime_specific: true
+
+# 성능 설정
+perf:
+  hot_window_bars: 300
+  numba: true
+  max_p95_ms:
+    total: 1300
+    features: 300
+    inference: 40
+    duckdb: 250
+  degrade_actions:
+    - type: pause_trading
+    - type: maker_only
+
+# 모니터링
+monitoring:
+  slack_webhook: ""
+  metrics_port: 9090
+  health_check_interval: 60
+
+# 라이브 트레이딩
+live:
+  dry_run: true
+  exchange: "binance"
+  connector: "binance_official"
+  post_only: true
+  
+# API 키 (환경변수로 관리 권장)
+api:
+  key: "${BINANCE_API_KEY}"
+  secret: "${BINANCE_API_SECRET}"
